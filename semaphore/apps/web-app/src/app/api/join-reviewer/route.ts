@@ -1,10 +1,10 @@
 import { Contract, InfuraProvider, JsonRpcProvider, Wallet } from "ethers"
 import { NextRequest } from "next/server"
-import Feedback from "../../../../contract-artifacts/Feedback.json"
+import Review from "../../../../../contracts/artifacts/contracts/Review.sol/Review.json"
 
 export async function POST(req: NextRequest) {
-    if (typeof process.env.NEXT_PUBLIC_FEEDBACK_CONTRACT_ADDRESS !== "string") {
-        throw new Error("Please, define NEXT_PUBLIC_FEEDBACK_CONTRACT_ADDRESS in your .env file")
+    if (typeof process.env.NEXT_PUBLIC_REVIEW_CONTRACT_ADDRESS !== "string") {
+        throw new Error("Please, define NEXT_PUBLIC_REVIEW_CONTRACT_ADDRESS in your .env file")
     }
 
     if (typeof process.env.NEXT_PUBLIC_DEFAULT_NETWORK !== "string") {
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const ethereumPrivateKey = process.env.ETHEREUM_PRIVATE_KEY
     const ethereumNetwork = process.env.NEXT_PUBLIC_DEFAULT_NETWORK
     const infuraApiKey = process.env.INFURA_API_KEY
-    const contractAddress = process.env.NEXT_PUBLIC_FEEDBACK_CONTRACT_ADDRESS
+    const contractAddress = process.env.NEXT_PUBLIC_REVIEW_CONTRACT_ADDRESS
 
     const provider =
         ethereumNetwork === "localhost"
@@ -30,12 +30,23 @@ export async function POST(req: NextRequest) {
             : new InfuraProvider(ethereumNetwork, infuraApiKey)
 
     const signer = new Wallet(ethereumPrivateKey, provider)
-    const contract = new Contract(contractAddress, Feedback.abi, signer)
+    const contract = new Contract(contractAddress, Review.abi, signer)
 
-    const { feedback, merkleTreeDepth, merkleTreeRoot, nullifier, points } = await req.json()
+    const { identityCommitment, signature } = await req.json()
+    // Split the signature into `r` and `s` components
+    const r = signature.slice(0, 64);  // First 32 bytes (64 hex characters)
+    const s = signature.slice(64);     // Second 32 bytes
+
+    // Convert `r` and `s` from hexadecimal to BigInt
+    const rBigInt = BigInt("0x" + r);  // Convert to BigInt for Solidity's uint256
+    const sBigInt = BigInt("0x" + s);  // Convert to BigInt for Solidity's uint256
 
     try {
-        const transaction = await contract.sendFeedback(merkleTreeDepth, merkleTreeRoot, nullifier, feedback, points)
+        const transaction = await contract.joinReviewerGroup(
+            identityCommitment,
+            rBigInt.toString(),
+            sBigInt.toString()
+        )
 
         await transaction.wait()
 

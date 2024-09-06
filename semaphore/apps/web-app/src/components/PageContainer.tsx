@@ -3,7 +3,6 @@
 import LogsContext from "@/context/LogsContext"
 import SemaphoreContext from "@/context/SemaphoreContext"
 import useSemaphore from "@/hooks/useSemaphore"
-import shortenString from "@/utils/shortenString"
 import { SupportedNetwork } from "@semaphore-protocol/utils"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -19,8 +18,8 @@ export default function PageContainer({
     const [_logs, setLogs] = useState<string>("")
 
     useEffect(() => {
-        semaphore.refreshUsers()
-        semaphore.refreshFeedback()
+        semaphore.refreshReviewer()
+        semaphore.refreshReview()
     }, [])
 
     function getExplorerLink(network: SupportedNetwork, address: string) {
@@ -38,28 +37,18 @@ export default function PageContainer({
         <div>
             <div className="header">
                 <Link href="/" className="header-left">
-                    Feedback
+                    Tomaru
                 </Link>
                 <div className="header-right">
                     <a
-                        href={getExplorerLink(
-                            process.env.NEXT_PUBLIC_DEFAULT_NETWORK as SupportedNetwork,
-                            process.env.NEXT_PUBLIC_FEEDBACK_CONTRACT_ADDRESS as string
-                        )}
-                        target="_blank"
-                        rel="noreferrer noopener nofollow"
-                    >
-                        <div>{shortenString(process.env.NEXT_PUBLIC_FEEDBACK_CONTRACT_ADDRESS as string, [6, 4])}</div>
-                    </a>
-                    <a
-                        href="https://github.com/semaphore-protocol/semaphore"
+                        href="https://github.com/yuroitaki/tomaru"
                         target="_blank"
                         rel="noreferrer noopener nofollow"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="32"
+                            height="32"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"

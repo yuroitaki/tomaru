@@ -1,14 +1,16 @@
 "use client"
 
-import { Identity } from "@semaphore-protocol/core"
 import { useRouter } from "next/navigation"
 import { useCallback, useContext, useEffect, useState } from "react"
-import Stepper from "../components/Stepper"
 import LogsContext from "../context/LogsContext"
+import SemaphoreContext from "@/context/SemaphoreContext"
+import Image from "next/image"
+import { Identity } from "@semaphore-protocol/core"
 
-export default function IdentitiesPage() {
+export default function HomePage() {
     const router = useRouter()
     const { setLogs } = useContext(LogsContext)
+    const { _reviews, _reviewers } = useContext(SemaphoreContext)
     const [_identity, setIdentity] = useState<Identity>()
 
     useEffect(() => {
@@ -17,77 +19,86 @@ export default function IdentitiesPage() {
         if (privateKey) {
             const identity = new Identity(privateKey)
 
-            setIdentity(identity)
-
             setLogs("Your Semaphore identity has been retrieved from the browser cache 👌🏽")
-        } else {
-            setLogs("Create your Semaphore identity 👆🏽")
+
+            setIdentity(identity)
         }
     }, [setLogs])
 
-    const createIdentity = useCallback(async () => {
-        const identity = new Identity()
+    const createReview = useCallback(async () => {
+        if (_identity && reviewerHasJoined(_identity)) {
+            router.push("/review")
+        } else {
+            router.push("/prove")
+        }
+    }, [router, _reviewers, _identity])
 
-        setIdentity(identity)
-
-        localStorage.setItem("identity", identity.privateKey.toString())
-
-        setLogs("Your new Semaphore identity has just been created 🎉")
-    }, [setLogs])
+    const reviewerHasJoined = useCallback((identity: Identity) => {
+        return _reviewers.includes(identity.commitment.toString())
+    }, [_reviewers])
 
     return (
         <>
-            <h2 className="font-size: 3rem;">Identities</h2>
+            <h2 className="font-size: 3rem;">Authentic, Anonymous Hotel Reviews</h2>
 
-            <p>
-                The identity of a user in the Semaphore protocol. A{" "}
+            <div className="summary">
+                All reviews are cryptographically guaranteed to be posted by reviewers who previously booked
+                their hotels on{" "}
                 <a
-                    href="https://docs.semaphore.pse.dev/guides/identities"
+                    href="https://agoda.com"
                     target="_blank"
                     rel="noreferrer noopener nofollow"
                 >
-                    Semaphore identity
-                </a>{" "}
-                consists of an{" "}
-                <a
-                    href="https://github.com/privacy-scaling-explorations/zk-kit/tree/main/packages/eddsa-poseidon"
-                    target="_blank"
-                    rel="noreferrer noopener nofollow"
-                >
-                    EdDSA
-                </a>{" "}
-                public/private key pair and a commitment, used as the public identifier of the identity.
-            </p>
+                    Agoda
+                </a>{""}.
+            </div>
 
             <div className="divider"></div>
 
             <div className="text-top">
-                <h3>Identity</h3>
-                {_identity && (
-                    <button className="button-link" onClick={createIdentity}>
-                        New
+                <h3><a
+                        href="https://www.agoda.com/v-hotel-bencoolen/hotel/singapore-sg.html"
+                        target="_blank"
+                        rel="noreferrer noopener nofollow"
+                    >V Hotel Bencoolen, Singapore</a>
+                </h3>
+                {_reviews.length > 0 && (
+                    <button className="button-link" onClick={createReview}>
+                        Add Review
                     </button>
                 )}
             </div>
 
-            {_identity ? (
+            <div className="image-container">
+                <Image
+                    src="https://pix8.agoda.net/hotelImages/433173/-1/830fe0338a493daade4983f2e0011966.jpg?ca=7&ce=1&s=450x302"
+                    alt="hotel picture"
+                    width={405}
+                    height={302}
+                    priority={true}
+                />
+            </div>
+
+            {_reviews.length > 0 ? (
                 <div>
-                    <div className="box">
-                        <p className="box-text">Private Key: {_identity.privateKey.toString()}</p>
-                        <p className="box-text">Commitment: {_identity.commitment.toString()}</p>
-                    </div>
+                    {_reviews.map((f, i) => (
+                        <div key={i}>
+                            <p className="box box-text">{f}</p>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <div>
-                    <button className="button" onClick={createIdentity}>
-                        Create identity
+                    <button className="button" onClick={createReview}>
+                        Create Review
                     </button>
                 </div>
             )}
 
             <div className="divider"></div>
 
-            <Stepper step={1} onNextClick={_identity && (() => router.push("/groups"))} />
+            <h3>Other hotels...</h3>
+
         </>
     )
 }

@@ -6,16 +6,16 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "Semaphore Demo",
-    description: "A zero-knowledge protocol for anonymous signaling on Ethereum.",
-    icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
+    title: "Tomaru: Authentic, Anonymous Hotel Review",
+    description: "An authentic, anonymous hotel review platform on Ethereum.",
+    icons: { icon: "/tomaru.svg", apple: "/tomaru.png" },
     metadataBase: new URL("https://demo.semaphore.pse.dev"),
     openGraph: {
         type: "website",
         url: "https://demo.semaphore.pse.dev",
-        title: "Semaphore Demo",
-        description: "A zero-knowledge protocol for anonymous signaling on Ethereum.",
-        siteName: "Semaphore Demo",
+        title: "Tomaru",
+        description: "An authentic, anonymous hotel review platform on Ethereum.",
+        siteName: "Tomaru",
         images: [
             {
                 url: "https://demo.semaphore.pse.dev/social-media.png"

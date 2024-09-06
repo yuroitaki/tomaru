@@ -1,7 +1,9 @@
 import { SemaphoreEthers } from "@semaphore-protocol/data"
-import { decodeBytes32String, toBeHex } from "ethers"
+import { Contract, JsonRpcProvider, decodeBytes32String, toBeHex } from "ethers"
 import { useCallback, useState } from "react"
 import { SemaphoreContextType } from "../context/SemaphoreContext"
+import Feedback from "../../contract-artifacts/Review.json"
+import { BigNumberish } from "ethers"
 
 const ethereumNetwork =
     process.env.NEXT_PUBLIC_DEFAULT_NETWORK === "localhost"
@@ -9,49 +11,48 @@ const ethereumNetwork =
         : process.env.NEXT_PUBLIC_DEFAULT_NETWORK
 
 export default function useSemaphore(): SemaphoreContextType {
-    const [_users, setUsers] = useState<string[]>([])
-    const [_feedback, setFeedback] = useState<string[]>([])
+    const [_reviewers, setReviewers] = useState<string[]>([])
+    const [_reviews, setReview] = useState<string[]>([])
 
-    const refreshUsers = useCallback(async (): Promise<void> => {
+    const refreshReviewer = useCallback(async (): Promise<void> => {
         const semaphore = new SemaphoreEthers(ethereumNetwork, {
             address: process.env.NEXT_PUBLIC_SEMAPHORE_CONTRACT_ADDRESS
         })
 
-        const members = await semaphore.getGroupMembers(process.env.NEXT_PUBLIC_GROUP_ID as string)
-
-        setUsers(members)
+        const members = await semaphore.getGroupMembers(process.env.NEXT_PUBLIC_REVIEWER_GROUP_ID as string)
+        members.forEach((value, i) => members[i] = value.toString())
+        setReviewers(members)
     }, [])
 
-    const addUser = useCallback(
-        (user: any) => {
-            setUsers([..._users, user])
+    const addReviewer = useCallback(
+        (reviewer: any) => {
+            setReviewers([..._reviewers, reviewer])
         },
-        [_users]
+        [_reviewers]
     )
 
-    const refreshFeedback = useCallback(async (): Promise<void> => {
-        const semaphore = new SemaphoreEthers(ethereumNetwork, {
-            address: process.env.NEXT_PUBLIC_SEMAPHORE_CONTRACT_ADDRESS
-        })
+    const refreshReview = useCallback(async (): Promise<void> => {
+        const provider = new JsonRpcProvider("http://127.0.0.1:8545");
+        const contract = new Contract(process.env.NEXT_PUBLIC_REVIEW_CONTRACT_ADDRESS as string, Feedback.abi, provider);
 
-        const proofs = await semaphore.getGroupValidatedProofs(process.env.NEXT_PUBLIC_GROUP_ID as string)
+        const reviews: BigNumberish[] = await contract.getPosts()
 
-        setFeedback(proofs.map(({ message }: any) => decodeBytes32String(toBeHex(message, 32))))
+        setReview(reviews.map((review) => decodeBytes32String(toBeHex(review, 32))))
     }, [])
 
-    const addFeedback = useCallback(
+    const addReview = useCallback(
         (feedback: string) => {
-            setFeedback([..._feedback, feedback])
+            setReview([..._reviews, feedback])
         },
-        [_feedback]
+        [_reviews]
     )
 
     return {
-        _users,
-        _feedback,
-        refreshUsers,
-        addUser,
-        refreshFeedback,
-        addFeedback
+        _reviewers,
+        _reviews,
+        refreshReviewer,
+        addReviewer,
+        refreshReview,
+        addReview
     }
 }

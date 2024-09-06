@@ -1,0 +1,3 @@
+[submodule "semaphore/apps/contracts/lib/forge-std"]
+	path = semaphore/apps/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

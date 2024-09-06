@@ -51,6 +51,20 @@ p {
     margin-top: 3rem;
 }
 
+.image-container {
+    display: flex;
+    justify-content: center;  /* Horizontally center the image */
+    align-items: center;      /* Vertically center the image */
+    height: 35vh;            /* Full viewport height (optional, adjust as needed) */
+}
+
+.banner-container {
+    display: flex;
+    justify-content: center;  /* Horizontally center the image */
+    align-items: center;      /* Vertically center the image */
+    height: 25vh;            /* Full viewport height (optional, adjust as needed) */
+}
+
 .text-top {
     display: flex;
     justify-content: space-between;
@@ -74,6 +88,11 @@ h2 {
 h3 {
     font-size: 1.125rem;
     font-weight: 500;
+}
+
+.summary {
+    font-size: 1rem;
+    padding-top: 1rem;
 }
 
 .divider {
@@ -135,10 +154,31 @@ a {
 
 .button-link {
     cursor: pointer;
-    color: var(--slate300);
-    font-size: 1.1rem;
-    border: none;
-    background: none;
+    padding: 0.5rem 0.5rem;
+    color: var(--slate100);
+    font-size: 1.0rem;
+    border: 1px;
+    border-radius: 100px;
+    background-color: var(--blue800);
+    transition: all 200ms linear;
+    opacity: 0.9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2rem;
+}
+
+.button-link:hover {
+    background-color: var(--blue900);
+}
+
+.button-link:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.button-link:disabled:hover {
+    background-color: var(--blue800);
 }
 
 .box {
@@ -163,7 +203,7 @@ a {
 }
 
 .header-left {
-    font-size: 1.125rem;
+    font-size: 1.625rem;
     font-weight: 500;
     text-decoration: none;
 }

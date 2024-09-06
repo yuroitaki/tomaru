@@ -15,6 +15,9 @@ const nextConfig = withPWA({
     env: {
         INFURA_API_KEY: process.env.INFURA_API_KEY,
         ETHEREUM_PRIVATE_KEY: process.env.ETHEREUM_PRIVATE_KEY
+    },
+    images: {
+        domains: ['pix8.agoda.net'],  // Add your external image domain here
     }
 })
 

@@ -1,6 +1,6 @@
 import { task, types } from "hardhat/config"
 
-task("deploy", "Deploy a Feedback contract")
+task("deploy", "Deploy a Review contract")
     .addOptionalParam("semaphore", "Semaphore contract address", undefined, types.string)
     .addOptionalParam("logs", "Print the logs", true, types.boolean)
     .setAction(async ({ logs, semaphore: semaphoreAddress }, { ethers, run }) => {
@@ -12,13 +12,13 @@ task("deploy", "Deploy a Feedback contract")
             semaphoreAddress = await semaphore.getAddress()
         }
 
-        const FeedbackFactory = await ethers.getContractFactory("Feedback")
+        const ReviewFactory = await ethers.getContractFactory("Review")
 
-        const feedbackContract = await FeedbackFactory.deploy(semaphoreAddress)
+        const reviewContract = await ReviewFactory.deploy(semaphoreAddress)
 
         if (logs) {
-            console.info(`Feedback contract has been deployed to: ${await feedbackContract.getAddress()}`)
+            console.info(`Review contract has been deployed to: ${await reviewContract.getAddress()}`)
         }
 
-        return feedbackContract
+        return reviewContract
     })
