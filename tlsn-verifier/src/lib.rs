@@ -17,7 +17,7 @@ use std::{
 use tlsn_core::proof::{SessionProof, TlsProof};
 use tokio::net::TcpListener;
 use tower_service::Service;
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, trace};
 
 #[derive(Clone, Debug)]
 struct VerifierGlobals {
@@ -147,6 +147,8 @@ async fn verify(
         return VerifierServerError::Unexpected(eyre!("Verification failed: server name mismatches")).into_response();
     }
 
+    debug!("Server name check passed!");
+
     // Verify the session proof against the Notary's public key
     //
     // This verifies the identity of the server using a default certificate verifier which trusts
@@ -155,6 +157,8 @@ async fn verify(
         .verify_with_default_cert_verifier(notary_pubkey()) {
             return VerifierServerError::Unexpected(eyre!("Verification failed: cannot validate cert: {err}")).into_response();
         };
+
+    debug!("Server cert check passed!");
             
     // The substrings proof proves select portions of the transcript, while redacting
     // anything the Prover chose not to disclose.
@@ -167,6 +171,8 @@ async fn verify(
         return VerifierServerError::Unexpected(eyre!("Verification failed: cannot validate session header")).into_response();
     };
 
+    debug!("Substring check passed!");
+
     // Check sent data: check host.
     debug!("Starting sent data verification...");
     let Ok(sent_data) = String::from_utf8(sent.data().to_vec()) else {
@@ -175,6 +181,8 @@ async fn verify(
     if let None = sent_data.find(&verifier_globals.server_domain) {
         return VerifierServerError::Unexpected(eyre!("Verification failed: expected host {}", &verifier_globals.server_domain)).into_response()
     }
+
+    debug!("Host check passed!");
 
     // Check received data: check json and hotel name.
     debug!("Starting received data verification...");
@@ -186,7 +194,9 @@ async fn verify(
         return VerifierServerError::Unexpected(eyre!("Verification failed: cannot find the right hotel name")).into_response();
     }
 
-    debug!("Received data: {:?}", response);
+    debug!("Hotel check passed!");
+
+    trace!("Received data: {:?}", response);
 
     let Ok(sent_string) = bytes_to_redacted_string(sent.data()) else {
         return VerifierServerError::Unexpected(eyre!("Verification failed: cannot parse sent data")).into_response();
@@ -195,14 +205,19 @@ async fn verify(
         return VerifierServerError::Unexpected(eyre!("Verification failed: cannot parse recv data")).into_response();
     };
 
-    info!("Verified sent data:\n{}", sent_string,);
-    info!("Verified received data:\n{}", received_string,);
+    trace!("Verified sent data:\n{}", sent_string,);
+    trace!("Verified received data:\n{}", received_string,);
+
+    debug!("Signing the identity commitment...");
 
     // Sign over id commit
     let secret_key = verifier_privkey().to_bytes();
     let signer = SigningKey::from_bytes(&secret_key).unwrap();
 
     let signature: Signature = signer.sign(&id_commit.to_bytes());
+
+    debug!("Verification completed!");
+
     (
         StatusCode::OK,
         Json(VerifyResponse {

@@ -6,7 +6,7 @@ const TRACING_FILTER: &str = "DEBUG";
 const VERIFIER_HOST: &str = "0.0.0.0";
 const VERIFIER_PORT: u16 = 9816;
 
-/// Make sure the following domain is the same in SERVER_URL on the prover side
+/// Make sure the following domain is the same on the prover side
 const SERVER_DOMAIN: &str = "www.agoda.com";
 const HOTEL_NAME: &str = "V Hotel Bencoolen"; 
 

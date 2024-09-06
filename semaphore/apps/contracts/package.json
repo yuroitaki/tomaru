@@ -51,8 +51,7 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "@semaphore-protocol/contracts": "4.0.3",
-        "elliptic-solidity": "^1.0.0"
+        "@semaphore-protocol/contracts": "4.0.3"
     },
     "packageManager": "yarn@4.1.0"
 }
