@@ -4,7 +4,7 @@
 
 # Tomaru
 
-Tomaru is an authentic, anonymous and independent hotel review web3 platform, powered by [TLSNotary](https://tlsnotary.org/) and [Semaphore](https://semaphore.pse.dev/).
+Tomaru is an authentic, anonymous and independent hotel review web3 platform, powered by [TLSNotary](https://tlsnotary.org/) and [Semaphore](https://semaphore.pse.dev/) — built as a hackathon idea demo.
 
 ## Motivation
 
@@ -19,7 +19,7 @@ Hotel owners can use TLSN to generate proof that they own the hotel's 'booking.c
 ## Test it yourself!
 1. Clone this repo, install [rust](https://www.rust-lang.org/tools/install), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), and [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 2. Run the offchain TLSN verifier: `cd tlsn-verifier; cargo r -r`
-3. Install webapp and smart contract dependencies: `cd semaphore; yarn`
+3. Install webapp and smart contract dependencies in another terminal: `cd semaphore; yarn`
 4. Compile the Semaphore smart contracts: `cd apps/contracts; yarn compile`
 5. Run the webapp and the Semaphore smart contracts: `cd ../..; yarn dev`
 6. Have fun!
