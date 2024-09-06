@@ -2,7 +2,7 @@
 pragma solidity ^0.8.23;
 
 import "@semaphore-protocol/contracts/interfaces/ISemaphore.sol";
-import "p256-verifier/P256.sol";
+// import "p256-verifier/P256.sol";
 
 contract Review {
     ISemaphore public semaphore;
