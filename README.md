@@ -20,10 +20,9 @@ Hotel owners can use TLSN to generate proof that they own the hotel's 'booking.c
 1. Clone this repo, install [rust](https://www.rust-lang.org/tools/install), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) and [foundry](https://getfoundry.sh/)
 2. Run the offchain TLSN verifier: `cd tomaru/tlsn-verifier; cargo r -r`
 3. In another terminal, install yarn dependencies: `cd tomaru/semaphore; yarn`
-4. Install the [p256 verifier contract](https://p256.eth.limo/): `cd apps/contracts; forge install daimo-eth/p256-verifier`
-5. Compile the Semaphore smart contracts: `yarn compile`
-6. Run the webapp and the Semaphore smart contracts: `cd ../..; yarn dev`
-7. Have fun!
+4. Compile the Semaphore smart contracts: `cd apps/contracts; yarn compile`
+5. Run the webapp and the Semaphore smart contracts: `cd ../..; yarn dev`
+6. Browse http://localhost:3000 and have fun!
 
 P/S: You'll have to DM me to get the TLSN attestation though, since this demo only supports a specific hotel that I booked previously on Agoda 😅
 
