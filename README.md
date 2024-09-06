@@ -17,19 +17,20 @@ Reviewers use TLSN to generate proof of a past hotel booking, and get added to a
 Hotel owners can use TLSN to generate proof that they own the hotel's 'booking.com' account, and can reply to the reviewer's post for any clarifications or questions.
 
 ## Test it yourself!
-1. Clone this repo, install [rust](https://www.rust-lang.org/tools/install), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), and [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
-2. Run the offchain TLSN verifier: `cd tlsn-verifier; cargo r -r`
-3. Install webapp and smart contract dependencies in another terminal: `cd semaphore; yarn`
-4. Compile the Semaphore smart contracts: `cd apps/contracts; yarn compile`
-5. Run the webapp and the Semaphore smart contracts: `cd ../..; yarn dev`
-6. Have fun!
+1. Clone this repo, install [rust](https://www.rust-lang.org/tools/install), [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) and [foundry](https://getfoundry.sh/)
+2. Run the offchain TLSN verifier: `cd tomaru/tlsn-verifier; cargo r -r`
+3. In another terminal, install yarn dependencies: `cd tomaru/semaphore; yarn`
+4. Install the [p256 verifier contract](https://p256.eth.limo/): `cd apps/contracts; forge install daimo-eth/p256-verifier`
+5. Compile the Semaphore smart contracts: `yarn compile`
+6. Run the webapp and the Semaphore smart contracts: `cd ../..; yarn dev`
+7. Have fun!
 
-P/S: You'll have to DM me to get the TLSN attestation though, since this demo only supports the specific hotel I booked previously on Agoda ;P
+P/S: You'll have to DM me to get the TLSN attestation though, since this demo only supports a specific hotel that I booked previously on Agoda 😅
 
 ## If I've more time...
 - Fix on chain verification of TLSN verifier's signature
 - Build Agoda TLSN [plugin](https://github.com/tlsnotary/tlsn-plugin-boilerplate/tree/main/examples)!
+- Generalise to more than 1 hotel 
 - Enable hotel owners to comment
 - Store posts and comments offchain to relax char limit
-- Generalise to more than 1 hotel 
 - Use Metamask login
